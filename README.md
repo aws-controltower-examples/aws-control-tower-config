@@ -37,7 +37,7 @@
 
 We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure.
 
-The AWS Control Tower config-customization is an AWS CloudFormation template designed to simplify the process of enabling and configuring AWS Security Hub in the security account of an AWS Control Tower environment. This template creates essential AWS resources, such as IAM roles, Lambda functions, and SNS topics, to automate the config-customization setup based on your specified parameters.
+The AWS Control Tower config-customization is an AWS CloudFormation template designed to simplify the process of enabling and configuring AWS aws-config-customization  in the security account of an AWS Control Tower environment. This template creates essential AWS resources, such as IAM roles, Lambda functions, and SNS topics, to automate the config-customization setup based on your specified parameters.
 
 ## Prerequisites
 
@@ -53,13 +53,12 @@ Before you proceed, ensure that you have the following prerequisites in place:
 
 | Name | Description | Type | Default |
 |------|-------------|------| ------- |
-| SecurityAccountId | The AWS account ID of the Security Account. | String | `n/a` |
-| OrganizationId | AWS Organizations ID for the Control Tower. | String | n/a |
-| RegionFilter | Specify whether config-customization should be enabled for all config-customization supported regions. | String | `ControlTower` |
-| S3SourceBucket | The S3 bucket containing the config-customization Lambda deployment package. | String | `""` |
-| S3SourceKey| he S3 object key for the config-customization Lambda deployment package. | String | `config-customization.zip` |
-| ComplianceFrequency | The frequency (in days) to check organizational compliance. | Number | `7` |
-| RoleToAssume | The IAM role to be assumed in child accounts to enable config-customization. | String | `AWSControlTowerExecution` |
+| ExcludedAccounts| A comma-separated list of AWS account IDs to be excluded from aws-config-customization  configuration. | String | `""` |
+| ConfigRecorderExcludedResourceTypes | List of all resource types to be excluded from Config Recorder | String | "AWS::HealthLake::FHIRDatastore,AWS::Pinpoint::Segment,AWS::Pinpoint::ApplicationSettings" |
+|   CloudFormationVersion: |   CloudFormationVersion put here | String |  2 |
+| S3SourceBucket | The S3 bucket containing the config-customization  Lambda deployment package. | String | `""` |
+
+
 
 ## Deployment
 
