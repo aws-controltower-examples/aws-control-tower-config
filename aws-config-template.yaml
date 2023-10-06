@@ -4,9 +4,8 @@ Parameters:
 
   ExcludedAccounts:
     Description: Excluded Accounts list. This list should contain Management account, Log Archive and Audit accounts at the minimum
-    Default: "['111111111111', '222222222222', '333333333333']"
+    Default: ""
     MaxLength: '2000'
-    MinLength: '36'
     Type: String
 
   ConfigRecorderExcludedResourceTypes:
@@ -17,24 +16,19 @@ Parameters:
   CloudFormationVersion:
     Type: String
     Default: 2
+  
+  S3SourceBucket:
+    Type: String
+    Description: "The S3 Bucket that contains the Lambda Zip File."
 
 Resources:
-    LambdaZipsBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-          BucketEncryption:
-            ServerSideEncryptionConfiguration:
-              - ServerSideEncryptionByDefault:
-                  SSEAlgorithm: AES256
-
     ProducerLambda:
         Type: AWS::Lambda::Function
         DeletionPolicy: Retain
-        DependsOn: CopyZips
         Properties:
             #FunctionName: ct_configrecorder_override_producer_cf
             Code:
-                S3Bucket: !Ref LambdaZipsBucket
+                S3Bucket: !Ref S3SourceBucket
                 S3Key: ct-blogs-content/ct_configrecorder_override_producer.zip
             Handler: ct_configrecorder_override_producer.lambda_handler
             Role: !GetAtt ProducerLambdaExecutionRole.Arn
@@ -43,7 +37,7 @@ Resources:
             Timeout: 300
             Architectures:
                 - x86_64
-            ReservedConcurrentExecutions: 1
+            #ReservedConcurrentExecutions: 1
             Environment:
                 Variables:
                     EXCLUDED_ACCOUNTS: !Ref ExcludedAccounts
@@ -62,11 +56,10 @@ Resources:
     ConsumerLambda:
         Type: AWS::Lambda::Function
         DeletionPolicy: Retain
-        DependsOn: CopyZips
         Properties:
             #FunctionName: ct_configrecorder_override_consumer_cf
             Code:
-                S3Bucket: !Ref LambdaZipsBucket
+                S3Bucket: !Ref S3SourceBucket
                 S3Key: ct-blogs-content/ct_configrecorder_override_consumer_v2.zip
             Handler: ct_configrecorder_override_consumer.lambda_handler
             Role: !GetAtt ConsumerLambdaExecutionRole.Arn
@@ -75,7 +68,7 @@ Resources:
             Timeout: 180
             Architectures:
                 - x86_64
-            ReservedConcurrentExecutions: 10
+            #ReservedConcurrentExecutions: 10
             Environment:
                 Variables:
                     LOG_LEVEL: INFO
@@ -193,12 +186,12 @@ Resources:
         ServiceToken: !GetAtt "ProducerLambda.Arn"
         FunctionName: !Ref ProducerLambda
         Version: !Ref CloudFormationVersion
-
+        
     CopyZips:
       Type: Custom::CopyZips
       Properties:
         ServiceToken: !GetAtt 'CopyZipsFunction.Arn'
-        DestBucket: !Ref 'LambdaZipsBucket'
+        DestBucket: !Ref S3SourceBucket
         #update this to match AWS public bucket
         #s3://marketplace-sa-resources/ct-blogs-content/ct_configrecorder_override_consumer_v2.zip
         #s3://marketplace-sa-resources/ct-blogs-content/ct_configrecorder_override_producer.zip
@@ -238,7 +231,7 @@ Resources:
                     - s3:DeleteObject
                     - s3:PutObjectTagging
                   Resource:
-                    - !Sub 'arn:${AWS::Partition}:s3:::${LambdaZipsBucket}/ct-blogs-content/*'
+                    - !Sub 'arn:${AWS::Partition}:s3:::${S3SourceBucket}/ct-blogs-content/*'
 
     CopyZipsFunction:
       Type: AWS::Lambda::Function
@@ -247,7 +240,7 @@ Resources:
         Handler: index.handler
         Runtime: python3.10
         Role: !GetAtt 'CopyZipsRole.Arn'
-        ReservedConcurrentExecutions: 1
+        #ReservedConcurrentExecutions: 1
         Timeout: 300
         Code:
           ZipFile: |
