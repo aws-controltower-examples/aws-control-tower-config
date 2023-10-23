@@ -8,6 +8,6 @@ on:
 jobs:
   cloudformation-checks:
     uses: clouddrove/github-shared-workflows/.github/workflows/cf-lint.yml@master
-    # with:
-    #   cf_file_path: ./awsconfig.template
+    with:
+      cf_file_path: ./config.template
 ...
