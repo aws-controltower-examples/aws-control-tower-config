@@ -30,7 +30,7 @@ Resources:
             #FunctionName: ct_configrecorder_override_producer_cf
             Code:
                 S3Bucket: !Ref S3SourceBucket
-                S3Key: ct-blogs-content/ct_configrecorder_override_producer.zip
+                S3Key: ct-blogs-content/config2.zip
             Handler: ct_configrecorder_override_producer.lambda_handler
             Role: !GetAtt ProducerLambdaExecutionRole.Arn
             Runtime: python3.10
@@ -63,7 +63,7 @@ Resources:
             #FunctionName: ct_configrecorder_override_consumer_cf
             Code:
                 S3Bucket: !Ref S3SourceBucket
-                S3Key: ct-blogs-content/ct_configrecorder_override_consumer_v2.zip
+                S3Key: ct-blogs-content/config2.zip
             Handler: ct_configrecorder_override_consumer.lambda_handler
             Role: !GetAtt ConsumerLambdaExecutionRole.Arn
             Runtime: python3.10
@@ -193,4 +193,3 @@ Resources:
         ServiceToken: !GetAtt "ProducerLambda.Arn"
         FunctionName: !Ref ProducerLambda
         Version: !Ref CloudFormationVersion
-        
