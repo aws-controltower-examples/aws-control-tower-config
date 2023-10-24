@@ -43,7 +43,7 @@ Resources:
                 Variables:
                     EXCLUDED_ACCOUNTS: !Ref ExcludedAccounts
                     LOG_LEVEL: INFO
-                    SQS_URL: !Ref SQSConfigRecorder
+                    SQS_URL: 'https://sqs.us-east-2.amazonaws.com/804266066009/Config-Consumer-SQSConfigRecorder-xz2GAOOWogni'
 
     ProducerLambdaPermissions:                
       Type: AWS::Lambda::Permission
@@ -87,7 +87,7 @@ Resources:
                       - sqs:ReceiveMessage
                       - sqs:SendMessage
                       - sqs:GetQueueAttributes
-                    Resource: !GetAtt SQSConfigRecorder.Arn  
+                    Resource: 'arn:aws:sqs:us-east-2:804266066009:Config-Consumer-SQSConfigRecorder-xz2GAOOWogni'  
 
     ProducerLambdaTrigger:
       Type: 'Custom::ExecuteLambda'
