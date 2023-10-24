@@ -21,8 +21,7 @@ Parameters:
     Type: String
     Description: "The S3 Bucket that contains the Lambda Zip File."
 
-
-      
+ Resources:     
     ConsumerLambda:
         Type: AWS::Lambda::Function
         DeletionPolicy: Retain
