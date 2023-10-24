@@ -108,7 +108,7 @@ Resources:
                             "eventName": ["UpdateLandingZone", "CreateManagedAccount", "UpdateManagedAccount"]
                           }
                         }'
-          Name: !GetAtt SQSConfigRecorder.QueueName #ct_configrecorder_override_cf
+          Name: Config-Consumer-SQSConfigRecorder-xz2GAOOWogni
           State: ENABLED
           Targets: 
             - 
