@@ -97,4 +97,5 @@ Resources:
             VisibilityTimeout: 180
             DelaySeconds: 5
             KmsMasterKeyId: alias/aws/sqs
+        Exports: SQSConfigRecorder
 
